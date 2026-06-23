@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>攪拌槽反應器互動式教學</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Chemical Engineering 18-2-1</p>
+          <h1>攪拌槽反應器互動式教學</h1>
+          <p class="subtitle">從構造、傳熱、混合到批式與連續式操作，建立槽式反應器的工程直覺。</p>
+        </div>
+        <div class="status-box" aria-live="polite">
+          <span>目前操作判讀</span>
+          <strong id="statusText">穩定混合</strong>
+        </div>
+      </header>
+
+      <section class="layout">
+        <aside class="lesson-panel" aria-label="教學步驟">
+          <div class="panel-heading">
+            <span class="section-label">Lesson</span>
+            <h2>學習路徑</h2>
+          </div>
+          <ol class="lesson-list" id="lessonList">
+            <li class="active" data-step="0">
+              <button type="button"><span>1</span><strong>基本構造</strong></button>
+            </li>
+            <li data-step="1">
+              <button type="button"><span>2</span><strong>攪拌與混合</strong></button>
+            </li>
+            <li data-step="2">
+              <button type="button"><span>3</span><strong>夾套與盤管傳熱</strong></button>
+            </li>
+            <li data-step="3">
+              <button type="button"><span>4</span><strong>批式操作</strong></button>
+            </li>
+            <li data-step="4">
+              <button type="button"><span>5</span><strong>連續式與多槽串聯</strong></button>
+            </li>
+            <li data-step="5">
+              <button type="button"><span>6</span><strong>操作診斷</strong></button>
+            </li>
+          </ol>
+
+          <article class="explain-card">
+            <h3 id="lessonTitle">基本構造</h3>
+            <p id="lessonText"></p>
+          </article>
+        </aside>
+
+        <section class="workspace" aria-label="攪拌槽互動區">
+          <div class="toolbar" role="tablist" aria-label="檢視模式">
+            <button class="active" id="tankTab" type="button" role="tab" aria-selected="true">單槽構造</button>
+            <button id="trendTab" type="button" role="tab" aria-selected="false">濃度曲線</button>
+            <button id="cascadeTab" type="button" role="tab" aria-selected="false">多槽串聯</button>
+          </div>
+
+          <div class="diagram-stage">
+            <svg id="tankDiagram" viewBox="0 0 980 640" role="img" aria-labelledby="tankTitle tankDesc">
+              <title id="tankTitle">攪拌槽反應器構造示意圖</title>
+              <desc id="tankDesc">顯示馬達、攪拌軸、攪拌器、夾套、盤管、進料、卸料與冷熱媒管線。</desc>
+              <defs>
+                <linearGradient id="waterFill" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#c8f1fb" />
+                  <stop offset="100%" stop-color="#7cc7df" />
+                </linearGradient>
+                <linearGradient id="jacketFill" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#ff9a78" />
+                  <stop offset="100%" stop-color="#ef6a54" />
+                </linearGradient>
+                <marker id="arrowBlack" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L8,3 z" fill="#1f2b32" />
+                </marker>
+                <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L8,3 z" fill="#0c7db0" />
+                </marker>
+                <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L8,3 z" fill="#14934d" />
+                </marker>
+                <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L8,3 z" fill="#d44730" />
+                </marker>
+              </defs>
+
+              <g class="clickable" data-part="motor" tabindex="0" role="button" aria-label="馬達">
+                <rect x="438" y="18" width="88" height="66" class="motor" />
+                <g class="motor-slots">
+                  <line x1="448" y1="26" x2="448" y2="78" />
+                  <line x1="460" y1="26" x2="460" y2="78" />
+                  <line x1="472" y1="26" x2="472" y2="78" />
+                  <line x1="484" y1="26" x2="484" y2="78" />
+                  <line x1="496" y1="26" x2="496" y2="78" />
+                  <line x1="508" y1="26" x2="508" y2="78" />
+                </g>
+                <path class="label-line" d="M526 48 L604 38" />
+                <text x="616" y="48">馬達</text>
+              </g>
+
+              <g class="clickable" data-part="shaft" tabindex="0" role="button" aria-label="攪拌軸">
+                <rect x="462" y="84" width="40" height="70" class="bearing" />
+                <rect x="475" y="84" width="14" height="78" class="shaft" />
+                <path class="label-line" d="M490 138 L615 126" />
+                <text x="626" y="134">攪拌軸</text>
+              </g>
+
+              <g class="clickable" data-part="tank" tabindex="0" role="button" aria-label="槽體">
+                <path class="jacket" d="M282 205 C285 138 359 116 482 116 C605 116 679 138 682 205 L682 390 C682 495 604 558 482 558 C360 558 282 495 282 390 Z" />
+                <path class="vessel" d="M306 210 C308 156 367 140 482 140 C597 140 656 156 658 210 L658 388 C658 476 584 528 482 528 C380 528 306 476 306 388 Z" />
+                <path id="liquid" class="liquid" d="M324 234 C352 226 381 242 410 234 C440 226 466 242 494 234 C523 226 553 242 582 234 C609 226 631 236 642 234 L642 388 C642 463 576 512 482 512 C388 512 322 463 322 388 Z" />
+                <path class="surface" d="M324 234 C352 226 381 242 410 234 C440 226 466 242 494 234 C523 226 553 242 582 234 C609 226 631 236 642 234" />
+                <path class="label-line" d="M660 330 L760 314" />
+                <text x="772" y="322">夾套</text>
+              </g>
+
+              <g class="clickable" data-part="coil" tabindex="0" role="button" aria-label="盤管">
+                <path id="coil" class="coil" d="M350 252 C415 270 535 270 612 292 C532 312 430 306 352 326 C426 348 530 348 614 370 C540 390 428 386 352 408" />
+                <path class="label-line" d="M610 390 L754 412" />
+                <text x="766" y="420">盤管</text>
+              </g>
+
+              <g class="clickable" data-part="impeller" tabindex="0" role="button" aria-label="攪拌器">
+                <g id="impellerGroup">
+                  <rect id="shaft" x="475" y="150" width="14" height="372" class="shaft shaft-front" />
+                  <g class="rotor-stage" data-cx="482" data-cy="285" data-phase="0">
+                    <rect x="354" y="276" width="128" height="18" class="blade" />
+                    <rect x="482" y="276" width="128" height="18" class="blade" />
+                    <rect x="459" y="270" width="46" height="30" class="hub" />
+                  </g>
+                  <g class="rotor-stage" data-cx="482" data-cy="361" data-phase="42">
+                    <rect x="356" y="352" width="126" height="18" class="blade" />
+                    <rect x="482" y="352" width="126" height="18" class="blade" />
+                    <rect x="459" y="346" width="46" height="30" class="hub" />
+                  </g>
+                  <g class="rotor-stage" data-cx="482" data-cy="445" data-phase="84">
+                    <rect x="354" y="436" width="128" height="18" class="blade" />
+                    <rect x="482" y="436" width="128" height="18" class="blade" />
+                    <rect x="459" y="430" width="46" height="30" class="hub" />
+                  </g>
+                  <path class="shaft-foot" d="M482 520 L454 578 M482 520 L510 578 M466 548 L498 548" />
+                </g>
+                <path class="label-line" d="M612 452 L758 472" />
+                <text x="770" y="480">攪拌器</text>
+              </g>
+
+              <g class="clickable" data-part="feed" tabindex="0" role="button" aria-label="進料">
+                <path class="pipe feed-pipe" d="M232 118 L300 184" />
+                <rect x="270" y="154" width="68" height="16" class="pipe-body" transform="rotate(-28 270 154)" />
+                <path id="feedDots" class="flow-dots" d="M232 118 L300 184" />
+                <text x="150" y="116" class="blue-text">進料</text>
+              </g>
+
+              <g class="clickable" data-part="coolant" tabindex="0" role="button" aria-label="冷卻水">
+                <path class="utility cold" d="M132 244 L282 244" />
+                <path class="utility cold" d="M132 398 L282 398" />
+                <text x="54" y="236" class="green-text">冷卻水</text>
+                <text x="54" y="390" class="green-text">冷卻水</text>
+              </g>
+
+              <g class="clickable" data-part="heating" tabindex="0" role="button" aria-label="熱媒或水蒸氣">
+                <path class="utility hot" d="M836 244 L682 244" />
+                <path class="utility hot" d="M418 558 L392 628" />
+                <text x="846" y="252" class="red-text">熱媒或水蒸氣</text>
+                <text x="318" y="620" class="red-text">熱媒出口</text>
+              </g>
+
+              <g class="clickable" data-part="discharge" tabindex="0" role="button" aria-label="卸料">
+                <path class="utility outlet" d="M482 528 L482 620" />
+                <path id="outletDots" class="flow-dots outlet-dot" d="M482 528 L482 620" />
+                <text x="498" y="602" class="blue-text">卸料</text>
+              </g>
+
+              <g class="clickable" data-part="support" tabindex="0" role="button" aria-label="基柱">
+                <line x1="292" y1="470" x2="292" y2="612" class="support" />
+                <line x1="672" y1="470" x2="672" y2="612" class="support" />
+                <path class="label-line" d="M680 506 L764 506" />
+                <text x="776" y="514">基柱</text>
+              </g>
+
+              <g id="particles"></g>
+            </svg>
+
+            <svg id="trendDiagram" class="hidden" viewBox="0 0 980 640" role="img" aria-labelledby="trendTitle trendDesc">
+              <title id="trendTitle">批式操作濃度對時間變化</title>
+              <desc id="trendDesc">反應物濃度隨時間下降，生成物濃度隨時間上升。</desc>
+              <g class="chart-card">
+                <rect x="164" y="96" width="660" height="420" class="chart-bg" />
+                <line x1="230" y1="458" x2="770" y2="458" class="axis" />
+                <line x1="230" y1="458" x2="230" y2="148" class="axis" />
+                <text x="484" y="528">時間</text>
+                <text x="166" y="306" transform="rotate(-90 166 306)">濃度</text>
+                <path id="reactantCurve" class="reactant-curve" d="" />
+                <path id="productCurve" class="product-curve" d="" />
+                <circle id="reactantPoint" r="8" class="reactant-point" />
+                <circle id="productPoint" r="8" class="product-point" />
+                <text x="476" y="214" class="product-label">生成物的濃度</text>
+                <text x="438" y="352" class="reactant-label">反應物 A 的濃度</text>
+              </g>
+              <foreignObject x="164" y="548" width="660" height="70">
+                <div class="svg-note">
+                  批式槽在反應期間不再連續進出料，因此濃度會隨時間改變；連續式槽達穩態後，槽內濃度可近似維持不變。
+                </div>
+              </foreignObject>
+            </svg>
+
+            <svg id="cascadeDiagram" class="hidden" viewBox="0 0 980 640" role="img" aria-labelledby="cascadeTitle cascadeDesc">
+              <title id="cascadeTitle">多級槽式反應器示意圖</title>
+              <desc id="cascadeDesc">多個連續式攪拌槽串聯，可逐步提高轉化率。</desc>
+              <text x="70" y="124">丁二烯 + 苯（溶劑）</text>
+              <path class="cascade-flow" d="M116 176 L230 176" />
+              <g class="small-tank clickable" data-part="stage1" tabindex="0" role="button" aria-label="第一反應槽">
+                <rect x="230" y="132" width="150" height="116" rx="22" />
+                <path d="M246 176 C278 164 318 188 362 176 L362 230 L246 230 Z" />
+                <line x1="305" y1="98" x2="305" y2="206" />
+                <rect x="270" y="196" width="70" height="12" />
+                <text x="244" y="292">第一反應槽</text>
+              </g>
+              <path class="cascade-flow" d="M380 190 L484 190 L484 176 L520 176" />
+              <g class="small-tank clickable" data-part="stage2" tabindex="0" role="button" aria-label="第二反應槽">
+                <rect x="520" y="132" width="150" height="116" rx="22" />
+                <path d="M536 176 C568 164 608 188 652 176 L652 230 L536 230 Z" />
+                <line x1="595" y1="98" x2="595" y2="206" />
+                <rect x="560" y="196" width="70" height="12" />
+                <text x="534" y="292">第二反應槽</text>
+              </g>
+              <path class="cascade-flow" d="M670 190 L760 190 L760 176 L800 176" />
+              <g class="small-tank clickable" data-part="stage3" tabindex="0" role="button" aria-label="第三反應槽">
+                <rect x="800" y="132" width="150" height="116" rx="22" />
+                <path d="M816 176 C848 164 888 188 932 176 L932 230 L816 230 Z" />
+                <line x1="875" y1="98" x2="875" y2="206" />
+                <rect x="840" y="196" width="70" height="12" />
+                <text x="814" y="292">第三反應槽</text>
+              </g>
+              <path class="cascade-flow" d="M950 190 L950 332 L730 332" />
+              <text x="742" y="320">生成物</text>
+              <path class="catalyst-line" d="M300 360 L300 248 M592 360 L592 248 M872 360 L872 248" />
+              <text x="202" y="374">觸媒或熱媒控制</text>
+              <foreignObject x="94" y="430" width="792" height="130">
+                <div class="svg-note">
+                  多級槽式反應器把數個連續式槽串聯。每一槽都接近完全混合，但沿著串聯方向，反應物濃度逐槽降低，因此可改善單一 CSTR 因立即稀釋造成的低轉化率問題。
+                </div>
+              </foreignObject>
+            </svg>
+          </div>
+
+          <div class="controls" aria-label="操作控制">
+            <label>
+              操作模式
+              <select id="modeControl">
+                <option value="batch">批式操作</option>
+                <option value="continuous">連續式操作</option>
+              </select>
+            </label>
+            <label>
+              攪拌轉速 <span id="rpmValue">180 rpm</span>
+              <input id="rpmControl" type="range" min="40" max="360" value="180" />
+            </label>
+            <label>
+              進料濃度 <span id="feedValue">1.0 mol/L</span>
+              <input id="feedControl" type="range" min="5" max="20" value="10" />
+            </label>
+            <label>
+              溫控強度 <span id="heatValue">中性</span>
+              <input id="heatControl" type="range" min="-5" max="5" value="0" />
+            </label>
+            <button id="toggleRun" type="button" aria-pressed="true">暫停動畫</button>
+          </div>
+        </section>
+
+        <aside class="info-panel" aria-label="元件說明">
+          <div class="panel-heading">
+            <span class="section-label">Inspect</span>
+            <h2 id="partTitle">槽體</h2>
+          </div>
+          <p id="partText"></p>
+          <dl class="metric-grid">
+            <div>
+              <dt>混合均勻度</dt>
+              <dd id="mixValue">76%</dd>
+            </div>
+            <div>
+              <dt>估計轉化率</dt>
+              <dd id="conversionValue">63%</dd>
+            </div>
+            <div>
+              <dt>溫度趨勢</dt>
+              <dd id="thermalValue">等溫</dd>
+            </div>
+            <div>
+              <dt>操作風險</dt>
+              <dd id="riskValue">低</dd>
+            </div>
+          </dl>
+          <article class="quiz-card">
+            <h3>快速檢核</h3>
+            <p>為什麼單一連續式攪拌槽的轉化率常低於相同總體積的管式反應器？</p>
+            <div class="quiz-options">
+              <button type="button" data-correct="false">因為 CSTR 無法裝設夾套或盤管。</button>
+              <button type="button" data-correct="true">因為進料進槽後立刻被產物混合物稀釋，反應物濃度較低。</button>
+              <button type="button" data-correct="false">因為 CSTR 只能批式操作，不能連續操作。</button>
+            </div>
+            <p id="quizFeedback" class="feedback" aria-live="polite"></p>
+          </article>
+        </aside>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
